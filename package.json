@@ -6,7 +6,8 @@
   "scripts": {
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "day": "cp -r day-template day-$DAY"
   },
   "keywords": [],
   "author": "",
