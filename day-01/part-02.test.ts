@@ -1,6 +1,6 @@
-import { getLines, readFile } from "../lib";
+import { getLines, logSolution, readFile } from "../lib";
 import { expect, test } from "vitest";
-import { sumCalibrationValues } from "./part-02";
+import { sumCalibrationValues } from "./solution";
 
 test("Sum calibration values including numbers as words", () => {
   const sampleInput = [
@@ -24,5 +24,7 @@ test("Part 2", () => {
 
   const result = sumCalibrationValues(lines);
 
-  expect(result).toBe(52834);
+  const expected = 52834;
+  expect(result).toBe(expected);
+  logSolution("1", "2", expected.toString());
 });
