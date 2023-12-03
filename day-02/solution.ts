@@ -1,0 +1,84 @@
+export type Bag = {
+  red: number;
+  green: number;
+  blue: number;
+};
+
+export type Round = Bag;
+
+export type Game = {
+  id: number;
+  rounds: Round[];
+};
+
+type GameReport = string;
+type GameReports = GameReport[];
+
+export const parseRound = (round: string): Bag => {
+  const colors = round.split(", ");
+
+  let red = 0;
+  let green = 0;
+  let blue = 0;
+
+  colors.forEach((color) => {
+    const [number, colorName] = color.split(" ");
+
+    if (colorName === "red") {
+      red = parseInt(number);
+    }
+    if (colorName === "green") {
+      green = parseInt(number);
+    }
+    if (colorName === "blue") {
+      blue = parseInt(number);
+    }
+  });
+
+  return {
+    red,
+    green,
+    blue,
+  };
+};
+
+export const parseGameReport = (report: GameReport): Game => {
+  // gameString like "Game 1"
+  const [gameString, untrimmedRoundsString] = report.split(":");
+  // idString like "1"
+  const [, idString] = gameString.split(" ");
+  const id = parseInt(idString);
+
+  const roundsString = untrimmedRoundsString.trim();
+
+  const unparsedRounds = roundsString.split(";").map((s) => s.trim());
+
+  const rounds = unparsedRounds.map((unparsed) => parseRound(unparsed));
+
+  return {
+    id,
+    rounds,
+  };
+};
+
+export const isPossible = (round: Round, bag: Bag): boolean => {
+  return (
+    round.red <= bag.red && round.green <= bag.green && round.blue <= bag.blue
+  );
+};
+
+export const sumIDsOfPossibleGames = (gameReports: GameReports, bag: Bag) => {
+  // Convert GameReports to Games
+  const games = gameReports.map(parseGameReport);
+
+  // Filter out GameReports where *any* round in the game had more red, green or
+  // blue cubes than there are in the bag.
+  const possibleGames = games.filter(({ rounds }) =>
+    rounds.every((round) => isPossible(round, bag)),
+  );
+
+  // Sum the IDs of the remaining games.
+  const sumIDs = possibleGames.reduce((prev, current) => prev + current.id, 0);
+
+  return sumIDs;
+};
