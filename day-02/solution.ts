@@ -1,3 +1,5 @@
+import { add } from "../lib";
+
 export type Bag = {
   red: number;
   green: number;
@@ -78,7 +80,7 @@ export const sumIDsOfPossibleGames = (gameReports: GameReports, bag: Bag) => {
   );
 
   // Sum the IDs of the remaining games.
-  const sumIDs = possibleGames.reduce((prev, current) => prev + current.id, 0);
+  const sumIDs = possibleGames.map((game) => game.id).reduce(add, 0);
 
   return sumIDs;
 };
@@ -118,7 +120,7 @@ export const sumPowersMinimumViableCubes = (
   const powers = minimumViableBags.map((bag) => powerOfBag(bag));
 
   // Sum all the powers
-  const sum = powers.reduce((a, b) => a + b, 0);
+  const sum = powers.reduce(add, 0);
 
   // Return the sum
   return sum;
