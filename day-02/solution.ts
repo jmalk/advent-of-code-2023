@@ -82,3 +82,44 @@ export const sumIDsOfPossibleGames = (gameReports: GameReports, bag: Bag) => {
 
   return sumIDs;
 };
+
+export const minimumViableCubes = (rounds: Round[]): Bag => {
+  return rounds.reduce(
+    (previous, current) => {
+      return {
+        red: Math.max(previous.red, current.red),
+        green: Math.max(previous.green, current.green),
+        blue: Math.max(previous.blue, current.blue),
+      };
+    },
+    {
+      red: 0,
+      green: 0,
+      blue: 0,
+    },
+  );
+};
+
+export const powerOfBag = ({ red, green, blue }: Bag): number =>
+  red * green * blue;
+
+export const sumPowersMinimumViableCubes = (
+  gameReports: GameReports,
+): number => {
+  // Parse all the game reports
+  const games = gameReports.map(parseGameReport);
+
+  // Reduce each game report to the minimum viable set of cubes to make the game possible
+  const minimumViableBags = games.map((game) =>
+    minimumViableCubes(game.rounds),
+  );
+
+  // Get the power of each set of cubes (nRed * nGreen * nBlue)
+  const powers = minimumViableBags.map((bag) => powerOfBag(bag));
+
+  // Sum all the powers
+  const sum = powers.reduce((a, b) => a + b, 0);
+
+  // Return the sum
+  return sum;
+};

@@ -4,11 +4,22 @@ import {
   Game,
   Round,
   isPossible,
+  minimumViableCubes,
   parseGameReport,
   parseRound,
+  powerOfBag,
   sumIDsOfPossibleGames,
+  sumPowersMinimumViableCubes,
 } from "./solution";
 import { getLines, logSolution, readFile } from "../lib";
+
+const sampleInput = [
+  "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
+  "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue",
+  "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red",
+  "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red",
+  "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green",
+];
 
 describe("parseRound", () => {
   test("2 green", () => {
@@ -101,22 +112,14 @@ describe("isPossible", () => {
   });
 });
 
-test("Impossible games", () => {
-  const input = [
-    "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
-    "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue",
-    "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red",
-    "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red",
-    "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green",
-  ];
-
+test("Sum IDs of possible games", () => {
   const bag: Bag = {
     red: 12,
     green: 13,
     blue: 14,
   };
 
-  const result = sumIDsOfPossibleGames(input, bag);
+  const result = sumIDsOfPossibleGames(sampleInput, bag);
 
   expect(result).toBe(8);
 });
@@ -137,14 +140,41 @@ test("Part 1", () => {
   logSolution("02", "1", expected.toString());
 });
 
+describe("Work out minimum viable set of cubes for a list of rounds", () => {
+  test("1 red, 1 green, 1 blue", () => {
+    const result = minimumViableCubes([{ red: 1, green: 1, blue: 1 }]);
+
+    expect(result).toStrictEqual({ red: 1, green: 1, blue: 1 });
+  });
+
+  test("1 red, 1 green, 2 blue; 3 red, 1 green, 1 blue ", () => {
+    const result = minimumViableCubes([
+      { red: 1, green: 1, blue: 2 },
+      { red: 3, green: 1, blue: 1 },
+    ]);
+
+    expect(result).toStrictEqual({ red: 3, green: 1, blue: 2 });
+  });
+});
+
+test("Power of a set is multiple of numbers of cubes", () => {
+  const bag: Bag = { red: 2, green: 3, blue: 5 };
+  const result = powerOfBag(bag);
+
+  expect(result).toBe(30);
+});
+
+test("Sum powers of minimum viable sets of cubes", () => {
+  const result = sumPowersMinimumViableCubes(sampleInput);
+
+  expect(result).toBe(2286);
+});
+
 test("Part 2", () => {
-  // TODO: template for day-xx
-  // const file = readFile("./day-xx/input.txt");
-  // const lines = getLines(file);
-  // const result = ;
-  // const expected = ;
-  // expect(result).toBe(expected);
-  // TODO: template for day-xx
-  // logSolution("xx", "2", expected);
-  // expect(true).toBe(false);
+  const file = readFile("./day-02/input.txt");
+  const lines = getLines(file);
+  const result = sumPowersMinimumViableCubes(lines);
+  const expected = 68638;
+  expect(result).toBe(expected);
+  logSolution("02", "2", expected.toString());
 });
