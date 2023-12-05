@@ -11,11 +11,40 @@ const schematic = [
   ".664.598..",
 ];
 
+export type NumberMatch = {
+  value: number;
+  row: number;
+  start: number;
+  end: number;
+};
+
+export const findNumbers = (schematic: string[]): NumberMatch[] => {
+  const numberMatches: NumberMatch[] = [];
+  const digits = /\d+/g;
+
+  schematic.forEach((row, index) => {
+    const matchesInRow = [...row.matchAll(digits)];
+
+    matchesInRow.forEach((match) => {
+      const numberString = match[0];
+      numberMatches.push({
+        value: parseInt(numberString),
+        row: index,
+        start: match.index,
+        end: match.index + numberString.length - 1,
+      });
+    });
+  });
+
+  return numberMatches;
+};
+
 export const sumPartNumbers = (schematic: string[]): number => {
   // Find all numbers in the schematic
   // -- For each row of the schematic
   // -- Do a str.matchAll(/\d+/g) to find all numbers
-  // -- Maybe record the start and end index of each number? Maybe make a class like NumberMatch (value, row, start, end)
+  // -- Maybe record the start and end index of each number?
+  // -- Maybe make a class like NumberMatch (value, row, start, end)
 
   // Filter out numbers which are not part numbers
   // -- Number is a part number if

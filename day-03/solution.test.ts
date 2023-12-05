@@ -1,8 +1,83 @@
-import { expect, test } from "vitest";
-import { sumPartNumbers } from "./solution";
+import { describe, expect, test } from "vitest";
+import { NumberMatch, findNumbers, sumPartNumbers } from "./solution";
 // import { getLines, logSolution, readFile } from "../lib";
 
-test("sumPartNumbers adds all part numbers that are adjacent to a non-period symbol, including diagonally adjacent", () => {
+describe("Find all numbers in a schematic", () => {
+  test("findNumbers finds one number", () => {
+    const schematic = ["58"];
+
+    const matches = findNumbers(schematic);
+
+    expect(matches).toStrictEqual<NumberMatch[]>([
+      {
+        value: 58,
+        row: 0,
+        start: 0,
+        end: 1,
+      },
+    ]);
+  });
+
+  test("findNumbers finds one number with its location", () => {
+    const schematic = ["...58"];
+
+    const matches = findNumbers(schematic);
+
+    expect(matches).toStrictEqual<NumberMatch[]>([
+      {
+        value: 58,
+        row: 0,
+        start: 3,
+        end: 4,
+      },
+    ]);
+  });
+
+  test("findNumbers finds two numbers with their locations", () => {
+    const schematic = ["...58..306.."];
+
+    const matches = findNumbers(schematic);
+
+    expect(matches).toStrictEqual<NumberMatch[]>([
+      {
+        value: 58,
+        row: 0,
+        start: 3,
+        end: 4,
+      },
+      {
+        value: 306,
+        row: 0,
+        start: 7,
+        end: 9,
+      },
+    ]);
+  });
+
+  test("findNumbers finds numbers in different rows", () => {
+    const schematic = ["............", ".......306..", "..7........."];
+
+    const matches = findNumbers(schematic);
+
+    expect(matches).toStrictEqual<NumberMatch[]>([
+      {
+        value: 306,
+        row: 1,
+        start: 7,
+        end: 9,
+      },
+
+      {
+        value: 7,
+        row: 2,
+        start: 2,
+        end: 2,
+      },
+    ]);
+  });
+});
+
+test.skip("sumPartNumbers adds all part numbers that are adjacent to a non-period symbol, including diagonally adjacent", () => {
   const schematic = [
     "467..114..",
     "...*......",
