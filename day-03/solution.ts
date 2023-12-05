@@ -1,3 +1,5 @@
+import { add } from "../lib";
+
 export type NumberMatch = {
   value: number;
   row: number;
@@ -5,7 +7,7 @@ export type NumberMatch = {
   end: number;
 };
 
-export type SymbolLocation = {
+export type Coordinate = {
   row: number;
   column: number;
 };
@@ -32,8 +34,8 @@ export const findNumbers = (schematic: string[]): NumberMatch[] => {
   return numberMatches;
 };
 
-export const findSymbols = (schematic: string[]): SymbolLocation[] => {
-  const locations: SymbolLocation[] = [];
+export const findSymbols = (schematic: string[]): Coordinate[] => {
+  const locations: Coordinate[] = [];
   // Caret in character set means NOT one of these
   const symbol = /[^0-9.]/g;
 
@@ -51,20 +53,73 @@ export const findSymbols = (schematic: string[]): SymbolLocation[] => {
   return locations;
 };
 
+// Doesn't care about boundaries.
+// Might return duplicate coordinates.
+export const getSymbolAdjacentCoords = (
+  symbolCoords: Coordinate[],
+): Coordinate[] => {
+  const symbolAdjacentCoords: Coordinate[] = [];
+
+  symbolCoords.forEach((coord) => {
+    const { row, column } = coord;
+    // ABOVE
+    const NW = {
+      row: row - 1,
+      column: column - 1,
+    };
+    const N = {
+      row: row - 1,
+      column: column,
+    };
+    const NE = {
+      row: row - 1,
+      column: column + 1,
+    };
+    // LEFT
+    const W = {
+      row: row,
+      column: column - 1,
+    };
+    // RIGHT
+    const E = {
+      row: row,
+      column: column + 1,
+    };
+    // BELOW
+    const SE = {
+      row: row + 1,
+      column: column + 1,
+    };
+    const S = {
+      row: row + 1,
+      column: column,
+    };
+    const SW = {
+      row: row + 1,
+      column: column - 1,
+    };
+
+    symbolAdjacentCoords.push(NW, N, NE, W, E, SW, S, SE);
+  });
+
+  return symbolAdjacentCoords;
+};
+
+const isPartNumber = (
+  numberMatch: NumberMatch,
+  symbolAdjacentCoords: Coordinate[],
+) => true;
+
 export const sumPartNumbers = (schematic: string[]): number => {
   // Find all numbers in the schematic
+  const numberMatches = findNumbers(schematic);
+  const symbolCoordinates = findSymbols(schematic);
+  const symbolAdjacentCoords = getSymbolAdjacentCoords(symbolCoordinates);
 
-  // Filter out numbers which are not part numbers
-  // -- Number is a part number if
-  // -- -- There is a symbol (not digit or period) above it
-  // -- -- There is a symbol (not digit or period) below it
-  // -- -- There is a symbol (not digit or period) left of it
-  // -- -- There is a symbol (not digit or period) above-left of it
-  // -- -- There is a symbol (not digit or period) below-left of it
-  // -- -- There is a symbol (not digit or period) right of it
-  // -- -- There is a symbol (not digit or period) above-right of it
-  // -- -- There is a symbol (not digit or period) below-right of it
+  const partNumbers = numberMatches.filter((numberMatch) =>
+    isPartNumber(numberMatch, symbolAdjacentCoords),
+  );
 
   // Return sum of actual part numbers
-  return 0;
+  return partNumbers.reduce(add, 0);
 };

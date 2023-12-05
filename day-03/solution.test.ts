@@ -3,6 +3,7 @@ import {
   NumberMatch,
   findNumbers,
   findSymbols,
+  getSymbolAdjacentCoords,
   sumPartNumbers,
 } from "./solution";
 // import { getLines, logSolution, readFile } from "../lib";
@@ -112,6 +113,54 @@ describe("Find all symbols in a schematic", () => {
       { row: 0, column: 5 },
       { row: 1, column: 2 },
       { row: 1, column: 7 },
+    ]);
+  });
+});
+
+describe("Get all adjacent coordinates for a list of symbol coordinates", () => {
+  test("Returns the surrounding coordinates for a single input coordinate", () => {
+    const symbolCoords = [{ row: 1, column: 1 }];
+
+    const adjacentCoords = getSymbolAdjacentCoords(symbolCoords);
+
+    expect(adjacentCoords).toStrictEqual([
+      { row: 0, column: 0 },
+      { row: 0, column: 1 },
+      { row: 0, column: 2 },
+      { row: 1, column: 0 },
+      { row: 1, column: 2 },
+      { row: 2, column: 0 },
+      { row: 2, column: 1 },
+      { row: 2, column: 2 },
+    ]);
+  });
+
+  test("Returns the surrounding coordinates for two input coordinates", () => {
+    const symbolCoords = [
+      { row: 1, column: 1 },
+      { row: 6, column: 6 },
+    ];
+
+    const adjacentCoords = getSymbolAdjacentCoords(symbolCoords);
+
+    expect(adjacentCoords).toStrictEqual([
+      { row: 0, column: 0 },
+      { row: 0, column: 1 },
+      { row: 0, column: 2 },
+      { row: 1, column: 0 },
+      { row: 1, column: 2 },
+      { row: 2, column: 0 },
+      { row: 2, column: 1 },
+      { row: 2, column: 2 },
+
+      { row: 5, column: 5 },
+      { row: 5, column: 6 },
+      { row: 5, column: 7 },
+      { row: 6, column: 5 },
+      { row: 6, column: 7 },
+      { row: 7, column: 5 },
+      { row: 7, column: 6 },
+      { row: 7, column: 7 },
     ]);
   });
 });
