@@ -1,5 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { NumberMatch, findNumbers, sumPartNumbers } from "./solution";
+import {
+  NumberMatch,
+  findNumbers,
+  findSymbols,
+  sumPartNumbers,
+} from "./solution";
 // import { getLines, logSolution, readFile } from "../lib";
 
 describe("Find all numbers in a schematic", () => {
@@ -77,6 +82,40 @@ describe("Find all numbers in a schematic", () => {
   });
 });
 
+describe("Find all symbols in a schematic", () => {
+  test("Finds one symbol", () => {
+    const schematic = ["*"];
+
+    const symbols = findSymbols(schematic);
+
+    expect(symbols).toStrictEqual([{ row: 0, column: 0 }]);
+  });
+
+  test("Finds two symbols", () => {
+    const schematic = ["*....#.."];
+
+    const symbols = findSymbols(schematic);
+
+    expect(symbols).toStrictEqual([
+      { row: 0, column: 0 },
+      { row: 0, column: 5 },
+    ]);
+  });
+
+  test("Finds symbols in multiple rows", () => {
+    const schematic = ["*....#..", "..+....&"];
+
+    const symbols = findSymbols(schematic);
+
+    expect(symbols).toStrictEqual([
+      { row: 0, column: 0 },
+      { row: 0, column: 5 },
+      { row: 1, column: 2 },
+      { row: 1, column: 7 },
+    ]);
+  });
+});
+
 test.skip("sumPartNumbers adds all part numbers that are adjacent to a non-period symbol, including diagonally adjacent", () => {
   const schematic = [
     "467..114..",
@@ -108,7 +147,7 @@ test.skip("Part 1", () => {
   expect(true).toBe(false);
 });
 
-test("Part 2", () => {
+test.skip("Part 2", () => {
   // TODO: template for day-xx
   // const file = readFile("./day-xx/input.txt");
   // const lines = getLines(file);
