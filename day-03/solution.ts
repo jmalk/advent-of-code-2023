@@ -7,13 +7,6 @@ export type Coordinate = {
 
 export type NumberMatch = {
   value: number;
-  row: number;
-  start: number;
-  end: number;
-};
-
-export type NumberMatch2 = {
-  value: number;
   coordinates: Coordinate[];
 };
 
@@ -27,11 +20,18 @@ export const findNumbers = (schematic: string[]): NumberMatch[] => {
     matchesInRow.forEach((match) => {
       const numberString = match[0];
 
+      const coordinates: Coordinate[] = [];
+
+      for (let i = match.index; i < match.index + numberString.length; i++) {
+        coordinates.push({
+          row: index,
+          column: i,
+        });
+      }
+
       numberMatches.push({
         value: parseInt(numberString),
-        row: index,
-        start: match.index,
-        end: match.index + numberString.length - 1,
+        coordinates,
       });
     });
   });
@@ -111,7 +111,7 @@ export const getSymbolAdjacentCoords = (
 };
 
 export const isPartNumber = (
-  numberMatch: NumberMatch2,
+  numberMatch: NumberMatch,
   symbolAdjacentCoords: Coordinate[],
 ) => {
   return symbolAdjacentCoords.some((coord) => {

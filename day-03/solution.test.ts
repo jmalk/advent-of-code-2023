@@ -1,7 +1,6 @@
 import { describe, expect, test } from "vitest";
 import {
   NumberMatch,
-  NumberMatch2,
   findNumbers,
   findSymbols,
   getSymbolAdjacentCoords,
@@ -19,9 +18,10 @@ describe("Find all numbers in a schematic", () => {
     expect(matches).toStrictEqual<NumberMatch[]>([
       {
         value: 58,
-        row: 0,
-        start: 0,
-        end: 1,
+        coordinates: [
+          { row: 0, column: 0 },
+          { row: 0, column: 1 },
+        ],
       },
     ]);
   });
@@ -34,9 +34,10 @@ describe("Find all numbers in a schematic", () => {
     expect(matches).toStrictEqual<NumberMatch[]>([
       {
         value: 58,
-        row: 0,
-        start: 3,
-        end: 4,
+        coordinates: [
+          { row: 0, column: 3 },
+          { row: 0, column: 4 },
+        ],
       },
     ]);
   });
@@ -49,15 +50,18 @@ describe("Find all numbers in a schematic", () => {
     expect(matches).toStrictEqual<NumberMatch[]>([
       {
         value: 58,
-        row: 0,
-        start: 3,
-        end: 4,
+        coordinates: [
+          { row: 0, column: 3 },
+          { row: 0, column: 4 },
+        ],
       },
       {
         value: 306,
-        row: 0,
-        start: 7,
-        end: 9,
+        coordinates: [
+          { row: 0, column: 7 },
+          { row: 0, column: 8 },
+          { row: 0, column: 9 },
+        ],
       },
     ]);
   });
@@ -70,16 +74,16 @@ describe("Find all numbers in a schematic", () => {
     expect(matches).toStrictEqual<NumberMatch[]>([
       {
         value: 306,
-        row: 1,
-        start: 7,
-        end: 9,
+        coordinates: [
+          { row: 1, column: 7 },
+          { row: 1, column: 8 },
+          { row: 1, column: 9 },
+        ],
       },
 
       {
         value: 7,
-        row: 2,
-        start: 2,
-        end: 2,
+        coordinates: [{ row: 2, column: 2 }],
       },
     ]);
   });
