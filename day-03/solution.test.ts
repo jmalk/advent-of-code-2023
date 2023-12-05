@@ -7,7 +7,7 @@ import {
   isPartNumber,
   sumPartNumbers,
 } from "./solution";
-// import { getLines, logSolution, readFile } from "../lib";
+import { getLines, logSolution, readFile } from "../lib";
 
 describe("Find all numbers in a schematic", () => {
   test("findNumbers finds one number", () => {
@@ -195,7 +195,7 @@ describe("Check if number is a part number", () => {
   });
 });
 
-test.skip("sumPartNumbers adds all part numbers that are adjacent to a non-period symbol, including diagonally adjacent", () => {
+test("sumPartNumbers adds all part numbers that are adjacent to a non-period symbol, including diagonally adjacent", () => {
   const schematic = [
     "467..114..",
     "...*......",
@@ -214,16 +214,13 @@ test.skip("sumPartNumbers adds all part numbers that are adjacent to a non-perio
   expect(sum).toBe(4361);
 });
 
-test.skip("Part 1", () => {
-  // TODO: template for day-xx
-  // const file = readFile("./day-xx/input.txt");
-  // const lines = getLines(file);
-  // const result = ;
-  // const expected = ;
-  // expect(result).toBe(expected);
-  // TODO: template for day-xx
-  // logSolution("xx", "1", expected);
-  expect(true).toBe(false);
+test("Part 1", () => {
+  const file = readFile("./day-03/input.txt");
+  const lines = getLines(file);
+  const result = sumPartNumbers(lines);
+  const expected = 540212;
+  expect(result).toBe(expected);
+  logSolution("03", "1", expected.toString());
 });
 
 test.skip("Part 2", () => {

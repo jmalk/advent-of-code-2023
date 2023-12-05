@@ -129,9 +129,9 @@ export const sumPartNumbers = (schematic: string[]): number => {
   const symbolCoordinates = findSymbols(schematic);
   const symbolAdjacentCoords = getSymbolAdjacentCoords(symbolCoordinates);
 
-  const partNumbers = numberMatches.filter((numberMatch) =>
-    isPartNumber(numberMatch, symbolAdjacentCoords),
-  );
+  const partNumbers = numberMatches
+    .filter((numberMatch) => isPartNumber(numberMatch, symbolAdjacentCoords))
+    .map((partNumber) => partNumber.value);
 
   // Return sum of actual part numbers
   return partNumbers.reduce(add, 0);
