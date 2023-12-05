@@ -1,5 +1,10 @@
 import { add } from "../lib";
 
+export type Coordinate = {
+  row: number;
+  column: number;
+};
+
 export type NumberMatch = {
   value: number;
   row: number;
@@ -7,9 +12,9 @@ export type NumberMatch = {
   end: number;
 };
 
-export type Coordinate = {
-  row: number;
-  column: number;
+export type NumberMatch2 = {
+  value: number;
+  coordinates: Coordinate[];
 };
 
 export const findNumbers = (schematic: string[]): NumberMatch[] => {
@@ -105,10 +110,18 @@ export const getSymbolAdjacentCoords = (
   return symbolAdjacentCoords;
 };
 
-const isPartNumber = (
-  numberMatch: NumberMatch,
+export const isPartNumber = (
+  numberMatch: NumberMatch2,
   symbolAdjacentCoords: Coordinate[],
-) => true;
+) => {
+  return symbolAdjacentCoords.some((coord) => {
+    return numberMatch.coordinates.some((numberCoord) => {
+      return (
+        coord.row === numberCoord.row && coord.column === numberCoord.column
+      );
+    });
+  });
+};
 
 export const sumPartNumbers = (schematic: string[]): number => {
   // Find all numbers in the schematic

@@ -1,9 +1,11 @@
 import { describe, expect, test } from "vitest";
 import {
   NumberMatch,
+  NumberMatch2,
   findNumbers,
   findSymbols,
   getSymbolAdjacentCoords,
+  isPartNumber,
   sumPartNumbers,
 } from "./solution";
 // import { getLines, logSolution, readFile } from "../lib";
@@ -162,6 +164,30 @@ describe("Get all adjacent coordinates for a list of symbol coordinates", () => 
       { row: 7, column: 6 },
       { row: 7, column: 7 },
     ]);
+  });
+});
+
+describe("Check if number is a part number", () => {
+  test("returns true if the coordinate of the digit is in given list of symbol adjacent coordinates", () => {
+    const numberMatch: NumberMatch2 = {
+      value: 1,
+      coordinates: [{ row: 1, column: 1 }],
+    };
+
+    const symbolAdjacentCoords = [{ row: 1, column: 1 }];
+
+    expect(isPartNumber(numberMatch, symbolAdjacentCoords)).toBe(true);
+  });
+
+  test("returns false if the coordinate of the digit is not in given list of symbol adjacent coordinates", () => {
+    const numberMatch: NumberMatch2 = {
+      value: 1,
+      coordinates: [{ row: 1, column: 1 }],
+    };
+
+    const symbolAdjacentCoords = [{ row: 4, column: 2 }];
+
+    expect(isPartNumber(numberMatch, symbolAdjacentCoords)).toBe(false);
   });
 });
 
