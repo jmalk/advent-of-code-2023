@@ -126,13 +126,19 @@ export const isPartNumber = (
 export const sumPartNumbers = (schematic: string[]): number => {
   // Find all numbers in the schematic
   const numberMatches = findNumbers(schematic);
+
+  // Find all symbols in the schematic
   const symbolCoordinates = findSymbols(schematic);
+
+  // Find all neighbour coordinates of symbols
   const symbolAdjacentCoords = getSymbolAdjacentCoords(symbolCoordinates);
 
   const partNumbers = numberMatches
+    // Filter out any numbers which are not next to symbols
     .filter((numberMatch) => isPartNumber(numberMatch, symbolAdjacentCoords))
+    // Get the actual number value of each part number
     .map((partNumber) => partNumber.value);
 
-  // Return sum of actual part numbers
+  // Return the sum of the part numbers
   return partNumbers.reduce(add, 0);
 };
