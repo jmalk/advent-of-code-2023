@@ -1,10 +1,13 @@
 import { describe, expect, test } from "vitest";
 import {
+  AsteriskWithNeighbours,
   NumberMatch,
   findNumbers,
   findSymbols,
+  getAsteriskNeighbours,
   getSymbolAdjacentCoords,
   isPartNumber,
+  sumGearRatios,
   sumPartNumbers,
 } from "./solution";
 import { getLines, logSolution, readFile } from "../lib";
@@ -89,7 +92,7 @@ describe("Find all numbers in a schematic", () => {
   });
 });
 
-describe("Find all symbols in a schematic", () => {
+describe("Find symbols in a schematic", () => {
   test("Finds one symbol", () => {
     const schematic = ["*"];
 
@@ -118,6 +121,18 @@ describe("Find all symbols in a schematic", () => {
       { row: 0, column: 0 },
       { row: 0, column: 5 },
       { row: 1, column: 2 },
+      { row: 1, column: 7 },
+    ]);
+  });
+
+  test("Finds asterisks in multiple rows", () => {
+    const schematic = ["*....#..", "..+...**"];
+
+    const symbols = findSymbols(schematic, /\*/g);
+
+    expect(symbols).toStrictEqual([
+      { row: 0, column: 0 },
+      { row: 1, column: 6 },
       { row: 1, column: 7 },
     ]);
   });
@@ -195,21 +210,104 @@ describe("Check if number is a part number", () => {
   });
 });
 
-test("sumPartNumbers adds all part numbers that are adjacent to a non-period symbol, including diagonally adjacent", () => {
-  const schematic = [
-    "467..114..",
-    "...*......",
-    "..35..633.",
-    "......#...",
-    "617*......",
-    ".....+.58.",
-    "..592.....",
-    "......755.",
-    "...$.*....",
-    ".664.598..",
-  ];
+describe("Get a symbol's neighbouring numbers", () => {
+  test("No neighbours", () => {
+    const result = getAsteriskNeighbours({ row: 0, column: 0 }, []);
 
-  const sum = sumPartNumbers(schematic);
+    expect(result).toStrictEqual({
+      value: "*",
+      coordinate: { row: 0, column: 0 },
+      neighbours: [],
+    });
+  });
+
+  test("One neighbour", () => {
+    const result = getAsteriskNeighbours({ row: 0, column: 0 }, [
+      { value: 1, coordinates: [{ row: 0, column: 1 }] },
+    ]);
+
+    expect(result).toStrictEqual<AsteriskWithNeighbours>({
+      value: "*",
+      coordinate: { row: 0, column: 0 },
+      neighbours: [{ value: 1, coordinates: [{ row: 0, column: 1 }] }],
+    });
+  });
+
+  test("One number but it's not a neighbour", () => {
+    const result = getAsteriskNeighbours({ row: 0, column: 0 }, [
+      { value: 1, coordinates: [{ row: 2, column: 2 }] },
+    ]);
+
+    expect(result).toStrictEqual<AsteriskWithNeighbours>({
+      value: "*",
+      coordinate: { row: 0, column: 0 },
+      neighbours: [],
+    });
+  });
+
+  test("Two neighbouring multi-digit numbers in a 2-D grid", () => {
+    /*
+    ....79
+    ...*..
+    402...
+    */
+    const result = getAsteriskNeighbours({ row: 1, column: 3 }, [
+      {
+        value: 79,
+        coordinates: [
+          { row: 0, column: 4 },
+          { row: 0, column: 5 },
+        ],
+      },
+      {
+        value: 402,
+        coordinates: [
+          { row: 2, column: 0 },
+          { row: 2, column: 1 },
+          { row: 2, column: 2 },
+        ],
+      },
+    ]);
+
+    expect(result).toStrictEqual<AsteriskWithNeighbours>({
+      value: "*",
+      coordinate: { row: 1, column: 3 },
+      neighbours: [
+        {
+          value: 79,
+          coordinates: [
+            { row: 0, column: 4 },
+            { row: 0, column: 5 },
+          ],
+        },
+        {
+          value: 402,
+          coordinates: [
+            { row: 2, column: 0 },
+            { row: 2, column: 1 },
+            { row: 2, column: 2 },
+          ],
+        },
+      ],
+    });
+  });
+});
+
+const exampleSchematic = [
+  "467..114..",
+  "...*......",
+  "..35..633.",
+  "......#...",
+  "617*......",
+  ".....+.58.",
+  "..592.....",
+  "......755.",
+  "...$.*....",
+  ".664.598..",
+];
+
+test("sumPartNumbers adds all part numbers that are adjacent to a non-period symbol, including diagonally adjacent", () => {
+  const sum = sumPartNumbers(exampleSchematic);
 
   expect(sum).toBe(4361);
 });
@@ -223,13 +321,17 @@ test("Part 1", () => {
   logSolution("03", "1", expected.toString());
 });
 
-test.skip("Part 2", () => {
-  // TODO: template for day-xx
-  // const file = readFile("./day-xx/input.txt");
-  // const lines = getLines(file);
-  // const result = ;
-  // const expected = ;
-  // expect(result).toBe(expected);
-  // TODO: template for day-xx
-  // logSolution("xx", "2", expected);
+test("sumGearRatios finds all gears and sums their ratios", () => {
+  const sum = sumGearRatios(exampleSchematic);
+
+  expect(sum).toBe(467835);
+});
+
+test("Part 2", () => {
+  const file = readFile("./day-03/input.txt");
+  const lines = getLines(file);
+  const result = sumGearRatios(lines);
+  const expected = 87605697;
+  expect(result).toBe(expected);
+  logSolution("03", "2", expected.toString());
 });

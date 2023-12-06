@@ -39,13 +39,15 @@ export const findNumbers = (schematic: string[]): NumberMatch[] => {
   return numberMatches;
 };
 
-export const findSymbols = (schematic: string[]): Coordinate[] => {
+// Caret in character set in default RegExp means NOT one of these characters
+export const findSymbols = (
+  schematic: string[],
+  target: RegExp = /[^0-9.]/g,
+): Coordinate[] => {
   const locations: Coordinate[] = [];
-  // Caret in character set means NOT one of these
-  const symbol = /[^0-9.]/g;
 
   schematic.forEach((row, index) => {
-    const matchesInRow = [...row.matchAll(symbol)];
+    const matchesInRow = [...row.matchAll(target)];
 
     matchesInRow.forEach((match) => {
       locations.push({
@@ -141,4 +143,49 @@ export const sumPartNumbers = (schematic: string[]): number => {
 
   // Return the sum of the part numbers
   return partNumbers.reduce(add, 0);
+};
+
+export type AsteriskWithNeighbours = {
+  value: "*";
+  coordinate: Coordinate;
+  neighbours: NumberMatch[];
+};
+
+export const getAsteriskNeighbours = (
+  asteriskCoord: Coordinate,
+  numberMatches: NumberMatch[],
+): AsteriskWithNeighbours => {
+  const asteriskNeighbourCoords = getSymbolAdjacentCoords([asteriskCoord]);
+
+  const neighbours = numberMatches.filter((numberMatch) => {
+    return isPartNumber(numberMatch, asteriskNeighbourCoords);
+  });
+
+  return {
+    value: "*",
+    coordinate: asteriskCoord,
+    neighbours,
+  };
+};
+
+export const sumGearRatios = (schematic: string[]): number => {
+  // Find asterisks
+  const asteriskCoordinates = findSymbols(schematic, /\*/g);
+
+  // Find gears: asterisks with exactly two neighbouring numbers
+  const numberMatches = findNumbers(schematic);
+  const asterisksWithNeighbours = asteriskCoordinates.map((asteriskCoord) =>
+    getAsteriskNeighbours(asteriskCoord, numberMatches),
+  );
+  const gears = asterisksWithNeighbours.filter(
+    (a) => a.neighbours.length === 2,
+  );
+
+  // Map gears to their ratio (product of the two neighbours)
+  const gearRatios = gears.map(
+    ({ neighbours }) => neighbours[0].value * neighbours[1].value,
+  );
+
+  // Sum the gear ratios
+  return gearRatios.reduce(add, 0);
 };
