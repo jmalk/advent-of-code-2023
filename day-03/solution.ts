@@ -10,6 +10,12 @@ export type NumberMatch = {
   coordinates: Coordinate[];
 };
 
+export type AsteriskWithNeighbours = {
+  value: "*";
+  coordinate: Coordinate;
+  neighbours: NumberMatch[];
+};
+
 export const findNumbers = (schematic: string[]): NumberMatch[] => {
   const numberMatches: NumberMatch[] = [];
   const digits = /\d+/g;
@@ -125,6 +131,23 @@ export const isPartNumber = (
   });
 };
 
+export const getAsteriskNeighbours = (
+  asteriskCoord: Coordinate,
+  numberMatches: NumberMatch[],
+): AsteriskWithNeighbours => {
+  const asteriskNeighbourCoords = getSymbolAdjacentCoords([asteriskCoord]);
+
+  const neighbours = numberMatches.filter((numberMatch) => {
+    return isPartNumber(numberMatch, asteriskNeighbourCoords);
+  });
+
+  return {
+    value: "*",
+    coordinate: asteriskCoord,
+    neighbours,
+  };
+};
+
 export const sumPartNumbers = (schematic: string[]): number => {
   // Find all numbers in the schematic
   const numberMatches = findNumbers(schematic);
@@ -143,29 +166,6 @@ export const sumPartNumbers = (schematic: string[]): number => {
 
   // Return the sum of the part numbers
   return partNumbers.reduce(add, 0);
-};
-
-export type AsteriskWithNeighbours = {
-  value: "*";
-  coordinate: Coordinate;
-  neighbours: NumberMatch[];
-};
-
-export const getAsteriskNeighbours = (
-  asteriskCoord: Coordinate,
-  numberMatches: NumberMatch[],
-): AsteriskWithNeighbours => {
-  const asteriskNeighbourCoords = getSymbolAdjacentCoords([asteriskCoord]);
-
-  const neighbours = numberMatches.filter((numberMatch) => {
-    return isPartNumber(numberMatch, asteriskNeighbourCoords);
-  });
-
-  return {
-    value: "*",
-    coordinate: asteriskCoord,
-    neighbours,
-  };
 };
 
 export const sumGearRatios = (schematic: string[]): number => {
