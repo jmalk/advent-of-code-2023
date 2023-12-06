@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
   AsteriskWithNeighbours,
+  Coordinate,
   NumberMatch,
   findNumbers,
   findSymbols,
@@ -21,10 +22,7 @@ describe("Find all numbers in a schematic", () => {
     expect(matches).toStrictEqual<NumberMatch[]>([
       {
         value: 58,
-        coordinates: [
-          { row: 0, column: 0 },
-          { row: 0, column: 1 },
-        ],
+        coordinates: [new Coordinate(0, 0), new Coordinate(1, 0)],
       },
     ]);
   });
@@ -37,10 +35,7 @@ describe("Find all numbers in a schematic", () => {
     expect(matches).toStrictEqual<NumberMatch[]>([
       {
         value: 58,
-        coordinates: [
-          { row: 0, column: 3 },
-          { row: 0, column: 4 },
-        ],
+        coordinates: [new Coordinate(3, 0), new Coordinate(4, 0)],
       },
     ]);
   });
@@ -53,17 +48,14 @@ describe("Find all numbers in a schematic", () => {
     expect(matches).toStrictEqual<NumberMatch[]>([
       {
         value: 58,
-        coordinates: [
-          { row: 0, column: 3 },
-          { row: 0, column: 4 },
-        ],
+        coordinates: [new Coordinate(3, 0), new Coordinate(4, 0)],
       },
       {
         value: 306,
         coordinates: [
-          { row: 0, column: 7 },
-          { row: 0, column: 8 },
-          { row: 0, column: 9 },
+          new Coordinate(7, 0),
+          new Coordinate(8, 0),
+          new Coordinate(9, 0),
         ],
       },
     ]);
@@ -78,15 +70,15 @@ describe("Find all numbers in a schematic", () => {
       {
         value: 306,
         coordinates: [
-          { row: 1, column: 7 },
-          { row: 1, column: 8 },
-          { row: 1, column: 9 },
+          new Coordinate(7, 1),
+          new Coordinate(8, 1),
+          new Coordinate(9, 1),
         ],
       },
 
       {
         value: 7,
-        coordinates: [{ row: 2, column: 2 }],
+        coordinates: [new Coordinate(2, 2)],
       },
     ]);
   });
@@ -98,7 +90,7 @@ describe("Find symbols in a schematic", () => {
 
     const symbols = findSymbols(schematic);
 
-    expect(symbols).toStrictEqual([{ row: 0, column: 0 }]);
+    expect(symbols).toStrictEqual([new Coordinate(0, 0)]);
   });
 
   test("Finds two symbols", () => {
@@ -106,10 +98,7 @@ describe("Find symbols in a schematic", () => {
 
     const symbols = findSymbols(schematic);
 
-    expect(symbols).toStrictEqual([
-      { row: 0, column: 0 },
-      { row: 0, column: 5 },
-    ]);
+    expect(symbols).toStrictEqual([new Coordinate(0, 0), new Coordinate(5, 0)]);
   });
 
   test("Finds symbols in multiple rows", () => {
@@ -118,10 +107,10 @@ describe("Find symbols in a schematic", () => {
     const symbols = findSymbols(schematic);
 
     expect(symbols).toStrictEqual([
-      { row: 0, column: 0 },
-      { row: 0, column: 5 },
-      { row: 1, column: 2 },
-      { row: 1, column: 7 },
+      new Coordinate(0, 0),
+      new Coordinate(5, 0),
+      new Coordinate(2, 1),
+      new Coordinate(7, 1),
     ]);
   });
 
@@ -131,9 +120,9 @@ describe("Find symbols in a schematic", () => {
     const symbols = findSymbols(schematic, /\*/g);
 
     expect(symbols).toStrictEqual([
-      { row: 0, column: 0 },
-      { row: 1, column: 6 },
-      { row: 1, column: 7 },
+      new Coordinate(0, 0),
+      new Coordinate(6, 1),
+      new Coordinate(7, 1),
     ]);
   });
 });
@@ -145,43 +134,40 @@ describe("Get all adjacent coordinates for a list of symbol coordinates", () => 
     const adjacentCoords = getSymbolAdjacentCoords(symbolCoords);
 
     expect(adjacentCoords).toStrictEqual([
-      { row: 0, column: 0 },
-      { row: 0, column: 1 },
-      { row: 0, column: 2 },
-      { row: 1, column: 0 },
-      { row: 1, column: 2 },
-      { row: 2, column: 0 },
-      { row: 2, column: 1 },
-      { row: 2, column: 2 },
+      new Coordinate(0, 0),
+      new Coordinate(1, 0),
+      new Coordinate(2, 0),
+      new Coordinate(0, 1),
+      new Coordinate(2, 1),
+      new Coordinate(0, 2),
+      new Coordinate(1, 2),
+      new Coordinate(2, 2),
     ]);
   });
 
   test("Returns the surrounding coordinates for two input coordinates", () => {
-    const symbolCoords = [
-      { row: 1, column: 1 },
-      { row: 6, column: 6 },
-    ];
+    const symbolCoords = [new Coordinate(1, 1), new Coordinate(6, 6)];
 
     const adjacentCoords = getSymbolAdjacentCoords(symbolCoords);
 
     expect(adjacentCoords).toStrictEqual([
-      { row: 0, column: 0 },
-      { row: 0, column: 1 },
-      { row: 0, column: 2 },
-      { row: 1, column: 0 },
-      { row: 1, column: 2 },
-      { row: 2, column: 0 },
-      { row: 2, column: 1 },
-      { row: 2, column: 2 },
+      new Coordinate(0, 0),
+      new Coordinate(1, 0),
+      new Coordinate(2, 0),
+      new Coordinate(0, 1),
+      new Coordinate(2, 1),
+      new Coordinate(0, 2),
+      new Coordinate(1, 2),
+      new Coordinate(2, 2),
 
-      { row: 5, column: 5 },
-      { row: 5, column: 6 },
-      { row: 5, column: 7 },
-      { row: 6, column: 5 },
-      { row: 6, column: 7 },
-      { row: 7, column: 5 },
-      { row: 7, column: 6 },
-      { row: 7, column: 7 },
+      new Coordinate(5, 5),
+      new Coordinate(6, 5),
+      new Coordinate(7, 5),
+      new Coordinate(5, 6),
+      new Coordinate(7, 6),
+      new Coordinate(5, 7),
+      new Coordinate(6, 7),
+      new Coordinate(7, 7),
     ]);
   });
 });

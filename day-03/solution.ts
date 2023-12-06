@@ -1,9 +1,14 @@
 import { add } from "../lib";
 
-export type Coordinate = {
-  row: number;
+export class Coordinate {
   column: number;
-};
+  row: number;
+
+  constructor(column, row) {
+    this.column = column;
+    this.row = row;
+  }
+}
 
 export type NumberMatch = {
   value: number;
@@ -29,10 +34,7 @@ export const findNumbers = (schematic: string[]): NumberMatch[] => {
       const coordinates: Coordinate[] = [];
 
       for (let i = match.index; i < match.index + numberString.length; i++) {
-        coordinates.push({
-          row: index,
-          column: i,
-        });
+        coordinates.push(new Coordinate(i, index));
       }
 
       numberMatches.push({
@@ -56,10 +58,7 @@ export const findSymbols = (
     const matchesInRow = [...row.matchAll(target)];
 
     matchesInRow.forEach((match) => {
-      locations.push({
-        row: index,
-        column: match.index,
-      });
+      locations.push(new Coordinate(match.index, index));
     });
   });
 
@@ -76,41 +75,17 @@ export const getSymbolAdjacentCoords = (
   symbolCoords.forEach((coord) => {
     const { row, column } = coord;
     // ABOVE
-    const NW = {
-      row: row - 1,
-      column: column - 1,
-    };
-    const N = {
-      row: row - 1,
-      column: column,
-    };
-    const NE = {
-      row: row - 1,
-      column: column + 1,
-    };
+    const NW = new Coordinate(column - 1, row - 1);
+    const N = new Coordinate(column, row - 1);
+    const NE = new Coordinate(column + 1, row - 1);
     // LEFT
-    const W = {
-      row: row,
-      column: column - 1,
-    };
+    const W = new Coordinate(column - 1, row);
     // RIGHT
-    const E = {
-      row: row,
-      column: column + 1,
-    };
+    const E = new Coordinate(column + 1, row);
     // BELOW
-    const SE = {
-      row: row + 1,
-      column: column + 1,
-    };
-    const S = {
-      row: row + 1,
-      column: column,
-    };
-    const SW = {
-      row: row + 1,
-      column: column - 1,
-    };
+    const SE = new Coordinate(column + 1, row + 1);
+    const S = new Coordinate(column, row + 1);
+    const SW = new Coordinate(column - 1, row + 1);
 
     symbolAdjacentCoords.push(NW, N, NE, W, E, SW, S, SE);
   });
