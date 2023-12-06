@@ -173,7 +173,7 @@ describe("Get all adjacent coordinates for a list of symbol coordinates", () => 
 
 describe("Check if number is a part number", () => {
   test("returns true if the coordinate of the digit is in given list of symbol adjacent coordinates", () => {
-    const numberMatch: NumberMatch2 = {
+    const numberMatch: NumberMatch = {
       value: 1,
       coordinates: [{ row: 1, column: 1 }],
     };
@@ -184,7 +184,7 @@ describe("Check if number is a part number", () => {
   });
 
   test("returns false if the coordinate of the digit is not in given list of symbol adjacent coordinates", () => {
-    const numberMatch: NumberMatch2 = {
+    const numberMatch: NumberMatch = {
       value: 1,
       coordinates: [{ row: 1, column: 1 }],
     };
