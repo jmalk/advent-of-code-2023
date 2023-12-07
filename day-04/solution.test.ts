@@ -56,7 +56,7 @@ test("Part 1", () => {
   const result = sumPoints(lines);
   const expected = 20407;
   expect(result).toBe(expected);
-  logSolution("04", "1", expected.toString());
+  logSolution("04", "1", expected);
 });
 
 test("sum total number of scratchcards", () => {
@@ -71,5 +71,5 @@ test("Part 2", () => {
   const result = sumNumberScratchcards(lines);
   const expected = 23806951;
   expect(result).toBe(expected);
-  logSolution("04", "2", expected.toString());
+  logSolution("04", "2", expected);
 });

@@ -304,7 +304,7 @@ test("Part 1", () => {
   const result = sumPartNumbers(lines);
   const expected = 540212;
   expect(result).toBe(expected);
-  logSolution("03", "1", expected.toString());
+  logSolution("03", "1", expected);
 });
 
 test("sumGearRatios finds all gears and sums their ratios", () => {
@@ -319,5 +319,5 @@ test("Part 2", () => {
   const result = sumGearRatios(lines);
   const expected = 87605697;
   expect(result).toBe(expected);
-  logSolution("03", "2", expected.toString());
+  logSolution("03", "2", expected);
 });

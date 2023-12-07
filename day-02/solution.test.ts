@@ -137,7 +137,7 @@ test("Part 1", () => {
   const result = sumIDsOfPossibleGames(lines, bag);
   const expected = 2776;
   expect(result).toBe(expected);
-  logSolution("02", "1", expected.toString());
+  logSolution("02", "1", expected);
 });
 
 describe("Work out minimum viable set of cubes for a list of rounds", () => {
@@ -176,5 +176,5 @@ test("Part 2", () => {
   const result = sumPowersMinimumViableCubes(lines);
   const expected = 68638;
   expect(result).toBe(expected);
-  logSolution("02", "2", expected.toString());
+  logSolution("02", "2", expected);
 });
