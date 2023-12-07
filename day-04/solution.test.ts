@@ -3,6 +3,7 @@ import {
   calculatePoints,
   getIntersection,
   parseScratchard,
+  sumNumberScratchcards,
   sumPoints,
 } from "./solution";
 import { getLines, logSolution, readFile } from "../lib";
@@ -58,13 +59,17 @@ test("Part 1", () => {
   logSolution("04", "1", expected.toString());
 });
 
-test.skip("Part 2", () => {
-  // TODO: template for day-xx
-  // const file = readFile("./day-xx/input.txt");
-  // const lines = getLines(file);
-  // const result = ;
-  // const expected = ;
-  // expect(result).toBe(expected);
-  // TODO: template for day-xx
-  // logSolution("xx", "2", expected);
+test("sum total number of scratchcards", () => {
+  const total = sumNumberScratchcards(sampleScratchcards);
+
+  expect(total).toBe(30);
+});
+
+test("Part 2", () => {
+  const file = readFile("./day-04/input.txt");
+  const lines = getLines(file);
+  const result = sumNumberScratchcards(lines);
+  const expected = 23806951;
+  expect(result).toBe(expected);
+  logSolution("04", "2", expected.toString());
 });

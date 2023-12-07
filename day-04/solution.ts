@@ -40,3 +40,23 @@ export const sumPoints = (scratchcardStrings: string[]): number => {
     .map((numberOfMatches) => calculatePoints(numberOfMatches))
     .reduce(add, 0);
 };
+
+export const sumNumberScratchcards = (scratchcardStrings: string[]): number => {
+  const pileOfCards = scratchcardStrings
+    .map(parseScratchard)
+    .map(({ winningNumbers, playersNumbers }) =>
+      getIntersection(winningNumbers, playersNumbers),
+    )
+    .map((matches, i) => ({ card: i, matches: matches.length, copies: 1 }));
+
+  for (let i = 0; i < pileOfCards.length; i++) {
+    const currentCard = pileOfCards[i];
+
+    for (let j = i + 1; j <= i + currentCard.matches; j++) {
+      const cardToCopy = pileOfCards[j];
+      cardToCopy.copies += currentCard.copies;
+    }
+  }
+
+  return pileOfCards.map((card) => card.copies).reduce(add, 0);
+};
