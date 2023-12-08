@@ -54,6 +54,26 @@ export const parseInput = (
   };
 };
 
+// Crashes with given input; the ranges are too big when all put in one array.
+export const expandSeedRanges = (ranges: number[]): number[] => {
+  const seeds: number[] = [];
+
+  // Loop stopping at every other number, starting with first.
+  for (let i = 0; i < ranges.length - 1; i += 2) {
+    // First number is lowest seed number in range
+    const lowerBound = ranges[i];
+    // Second number is length of range
+    const rangeLength = ranges[i + 1];
+
+    // Add <rangeLength> consecutive numbers to seeds
+    for (let j = 0; j < rangeLength; j++) {
+      seeds.push(lowerBound + j);
+    }
+  }
+
+  return seeds;
+};
+
 export const getMapped = (mappings: Mappings, n: number) => {
   const relevantBounds = mappings.find((mapBounds) => {
     const [, sourceStart, range] = mapBounds;
@@ -101,6 +121,31 @@ export const findLowestLocation = (
   const locations = seeds.map((seed) => seedToLocationNumber(almanac, seed));
 
   const closest = locations.reduce((prev, curr) => Math.min(prev, curr));
+
+  return closest;
+};
+
+export const findLowestLocationFromRanges = (
+  seedRanges: number[],
+  almanac: Almanac,
+): number => {
+  let closest = Infinity;
+
+  for (let i = 0; i < seedRanges.length - 1; i += 2) {
+    // First number is lowest seed number in range
+    const lowerBound = seedRanges[i];
+    // Second number is length of range
+    const rangeLength = seedRanges[i + 1];
+
+    // Add <rangeLength> consecutive numbers to seeds
+    for (let j = 0; j < rangeLength; j++) {
+      const location = seedToLocationNumber(almanac, lowerBound + j);
+
+      if (location < closest) {
+        closest = location;
+      }
+    }
+  }
 
   return closest;
 };

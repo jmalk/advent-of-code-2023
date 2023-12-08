@@ -1,6 +1,8 @@
 import { expect, test } from "vitest";
 import {
+  expandSeedRanges,
   findLowestLocation,
+  findLowestLocationFromRanges,
   getMapped,
   parseInput,
   seedToLocationNumber,
@@ -116,12 +118,28 @@ test("Part 1", () => {
   logSolution("05", "1", expected);
 });
 
+test("Expand seed ranges", () => {
+  const ranges = [79, 14, 55, 13];
+
+  const seeds = expandSeedRanges(ranges);
+
+  expect(seeds.length).toBe(27);
+});
+
+test("Find lowest location from ranges", () => {
+  const { seeds, almanac } = parseInput(sampleAlmanac);
+  const lowest = findLowestLocationFromRanges(seeds, almanac);
+
+  expect(lowest).toBe(46);
+});
+
+// Too slow!
 test.skip("Part 2", () => {
-  // TODO: template for day-xx
-  // const file = readFile("./day-xx/input.txt");
-  // const result = ;
-  // const expected = ;
-  // expect(result).toBe(expected);
-  // TODO: template for day-xx
-  // logSolution("xx", "2", expected);
+  console.log("Starting test");
+  const file = readFile("./day-05/input.txt");
+  const { seeds, almanac } = parseInput(file);
+  const result = findLowestLocationFromRanges(seeds, almanac);
+  const expected = 1;
+  expect(result).toBe(expected);
+  // logSolution("05", "1", expected);
 });
