@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import {
   findLowestLocation,
   getMapped,
-  parseAlmanac,
+  parseInput,
   seedToLocationNumber,
 } from "./solution";
 import { logSolution, readFile } from "../lib";
@@ -42,7 +42,7 @@ humidity-to-location map:
 56 93 4`;
 
 test("Parse almanac", () => {
-  const { seeds, almanac } = parseAlmanac(sampleAlmanac);
+  const { seeds, almanac } = parseInput(sampleAlmanac);
 
   expect(seeds).toStrictEqual([79, 14, 55, 13]);
   expect(almanac).toStrictEqual({
@@ -94,21 +94,23 @@ test("Get mapped value", () => {
 });
 
 test("Seed to location number", () => {
-  const { almanac } = parseAlmanac(sampleAlmanac);
+  const { almanac } = parseInput(sampleAlmanac);
   const locationNumber = seedToLocationNumber(almanac, 79);
 
   expect(locationNumber).toBe(82);
 });
 
 test("Find lowest location number", () => {
-  const lowest = findLowestLocation(sampleAlmanac);
+  const { seeds, almanac } = parseInput(sampleAlmanac);
+  const lowest = findLowestLocation(seeds, almanac);
 
   expect(lowest).toBe(35);
 });
 
 test("Part 1", () => {
   const file = readFile("./day-05/input.txt");
-  const result = findLowestLocation(file);
+  const { seeds, almanac } = parseInput(file);
+  const result = findLowestLocation(seeds, almanac);
   const expected = 389056265;
   expect(result).toBe(expected);
   logSolution("05", "1", expected);

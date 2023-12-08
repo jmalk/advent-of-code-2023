@@ -22,7 +22,7 @@ const chunkToMappingArrays = (chunk: string): number[][] =>
     // Within each nested array, turn the strings into numbers
     .map((arr) => arr.map((s) => parseInt(s)));
 
-export const parseAlmanac = (
+export const parseInput = (
   almanac: string,
 ): { seeds: number[]; almanac: Almanac } => {
   const [seedsChunk, ...mapChunks] = almanac.split("\n\n");
@@ -94,9 +94,10 @@ export const seedToLocationNumber = (
   return location;
 };
 
-export const findLowestLocation = (almanacStr: string): number => {
-  const { seeds, almanac } = parseAlmanac(almanacStr);
-
+export const findLowestLocation = (
+  seeds: number[],
+  almanac: Almanac,
+): number => {
   const locations = seeds.map((seed) => seedToLocationNumber(almanac, seed));
 
   const closest = locations.reduce((prev, curr) => Math.min(prev, curr));
