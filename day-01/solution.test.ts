@@ -18,7 +18,7 @@ test("Part 1", () => {
 
   const expected = 53334;
   expect(result).toBe(expected);
-  logSolution("1", "1", expected);
+  logSolution("01", "1", expected);
 });
 
 test("Sum calibration values including numbers as words", () => {
@@ -45,5 +45,5 @@ test("Part 2", () => {
 
   const expected = 52834;
   expect(result).toBe(expected);
-  logSolution("1", "2", expected);
+  logSolution("01", "2", expected);
 });
