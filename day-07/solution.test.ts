@@ -1,5 +1,12 @@
 import { describe, expect, test } from "vitest";
-import { compareHands, getHandType, getTotalWinnings } from "./solution";
+import {
+  compareHands,
+  compareHandsJokerRules,
+  getHandType,
+  getHandTypeJokerRules,
+  getTotalWinnings,
+  getTotalWinningsWithJokerRules,
+} from "./solution";
 import { getLines, logSolution, readFile } from "../lib";
 
 const exampleInput = [
@@ -162,13 +169,73 @@ test("Part 1", () => {
   logSolution("07", "1", expected);
 });
 
-test.skip("Part 2", () => {
-  // TODO: template for day-xx
-  // const file = readFile("./day-xx/input.txt");
-  // const lines = getLines(file);
-  // const result = ;
-  // const expected = ;
-  // expect(result).toBe(expected);
-  // TODO: template for day-xx
-  // logSolution("xx", "2", expected);
+test("Total winnings with Joker rule", () => {
+  const totalWinnings = getTotalWinningsWithJokerRules(exampleInput);
+
+  expect(totalWinnings).toBe(5905);
+});
+
+test("Compare hands with Joker Rules", () => {
+  const a = { bid: 1, cards: "KTJJT".split("") };
+  const b = { bid: 1, cards: "KK677".split("") };
+
+  expect(compareHandsJokerRules(a, b)).toBe(1);
+  expect(compareHandsJokerRules(b, a)).toBe(-1);
+});
+
+describe("Get hand type with Joker rules", () => {
+  test("Four of a kind with two jokers", () => {
+    const cardCounts = {
+      Q: 2,
+      J: 2,
+      2: 1,
+    };
+
+    const handType = getHandTypeJokerRules(cardCounts);
+
+    expect(handType).toBe("FOUR");
+  });
+
+  test("Full house with one joker", () => {
+    const cardCounts = {
+      Q: 2,
+      J: 1,
+      2: 2,
+    };
+
+    const handType = getHandTypeJokerRules(cardCounts);
+
+    expect(handType).toBe("FULL HOUSE");
+  });
+
+  test("Two pairs with no joker", () => {
+    const cardCounts = {
+      Q: 2,
+      2: 2,
+      3: 1,
+    };
+
+    const handType = getHandTypeJokerRules(cardCounts);
+
+    expect(handType).toBe("TWO PAIR");
+  });
+
+  test("Five of a kind with five jokers", () => {
+    const cardCounts = {
+      J: 5,
+    };
+
+    const handType = getHandTypeJokerRules(cardCounts);
+
+    expect(handType).toBe("FIVE");
+  });
+});
+
+test("Part 2", () => {
+  const file = readFile("./day-07/input.txt");
+  const lines = getLines(file);
+  const result = getTotalWinningsWithJokerRules(lines);
+  const expected = 251735672;
+  expect(result).toBe(expected);
+  logSolution("07", "2", expected);
 });
